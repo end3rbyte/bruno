@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import get from 'lodash/get';
 import { useDispatch, useSelector } from 'react-redux';
 import CodeEditor from 'components/CodeEditor';
@@ -6,6 +6,7 @@ import { updateRequestTests } from 'providers/ReduxStore/slices/collections';
 import { sendRequest, saveRequest } from 'providers/ReduxStore/slices/collections/actions';
 import { useTheme } from 'providers/Theme';
 import StyledWrapper from './StyledWrapper';
+import { updateCodeMirrorsHeight } from 'utils/common/codemirror';
 
 const Tests = ({ item, collection }) => {
   const dispatch = useDispatch();
@@ -24,11 +25,15 @@ const Tests = ({ item, collection }) => {
     );
   };
 
+  useEffect(() => {
+    updateCodeMirrorsHeight('#test-tab', 65, 'calc(100vh - 250px)');
+  });
+
   const onRun = () => dispatch(sendRequest(item, collection.uid));
   const onSave = () => dispatch(saveRequest(item.uid, collection.uid));
 
   return (
-    <StyledWrapper className="w-full">
+    <StyledWrapper id="test-tab" className="w-full">
       <CodeEditor
         collection={collection}
         value={tests || ''}

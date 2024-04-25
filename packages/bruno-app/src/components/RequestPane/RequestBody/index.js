@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import get from 'lodash/get';
 import CodeEditor from 'components/CodeEditor';
 import FormUrlEncodedParams from 'components/RequestPane/FormUrlEncodedParams';
@@ -8,6 +8,7 @@ import { useTheme } from 'providers/Theme';
 import { updateRequestBody } from 'providers/ReduxStore/slices/collections';
 import { sendRequest, saveRequest } from 'providers/ReduxStore/slices/collections/actions';
 import StyledWrapper from './StyledWrapper';
+import { updateCodeMirrorsHeight } from 'utils/common/codemirror';
 
 const RequestBody = ({ item, collection }) => {
   const dispatch = useDispatch();
@@ -15,6 +16,10 @@ const RequestBody = ({ item, collection }) => {
   const bodyMode = item.draft ? get(item, 'draft.request.body.mode') : get(item, 'request.body.mode');
   const { displayedTheme } = useTheme();
   const preferences = useSelector((state) => state.app.preferences);
+
+  useEffect(() => {
+    updateCodeMirrorsHeight('#request-body', 65, 'calc(100vh - 250px)');
+  });
 
   const onEdit = (value) => {
     dispatch(
@@ -45,7 +50,7 @@ const RequestBody = ({ item, collection }) => {
     };
 
     return (
-      <StyledWrapper className="w-full">
+      <StyledWrapper id="request-body" className="w-full">
         <CodeEditor
           collection={collection}
           theme={displayedTheme}
